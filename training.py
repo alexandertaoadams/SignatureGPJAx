@@ -435,5 +435,5 @@ def _check_batch_size(batch_size: tp.Any) -> None:
 
 __all__ = [
     "fit",
-    "get_batch",
+    "_custom_get_batch",
 ]
