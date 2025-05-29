@@ -25,6 +25,10 @@ from gpjax.typing import (
 
 Model = tp.TypeVar("Model", bound=nnx.Module)
 
+class CustomDataset(gpx.dataset.Dataset):
+    def __init__(self,X,y):
+        self.X = X
+        self.y = y
 
 def custom_fit(  # noqa: PLR0913
     *,
