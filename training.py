@@ -145,6 +145,8 @@ def custom_fit(  # noqa: PLR0913
             batch = train_data
 
         loss_val, loss_gradient = jax.value_and_grad(loss)(params, batch)
+        print(loss_val)
+        print(loss_gradient)
         updates, opt_state = optim.update(loss_gradient, opt_state, params)
         params = ox.apply_updates(params, updates)
 
