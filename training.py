@@ -135,7 +135,7 @@ def custom_fit(  # noqa: PLR0913
         params, opt_state = carry
 
         if batch_size != -1:
-            batch = get_batch(train_data, batch_size, key)
+            batch = _custom_get_batch(train_data, batch_size, key)
         else:
             batch = train_data
 
