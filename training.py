@@ -26,6 +26,8 @@ from gpjax.typing import (
 
 Model = tp.TypeVar("Model", bound=nnx.Module)
 
+
+
 class CustomDataset(gpjax.dataset.Dataset):
     def __init__(self,X,y):
         self.X = X
