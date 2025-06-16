@@ -1,5 +1,5 @@
 
-from .custom_classes_and_functions import custom_compute_engine
+from .custom_classes_and_functions import CustomComputeEngine
 
 class SignatureKernel(gpx.kernels.AbstractKernel):
     def __init__(self, n_levels, lengthscales, weights, active_dims=None, n_dims=None, compute_engine=CustomComputeEngine()):
