@@ -1,3 +1,6 @@
+
+from .custom_classes_and_functions import custom_compute_engine
+
 class SignatureKernel(gpx.kernels.AbstractKernel):
     def __init__(self, n_levels, lengthscales, weights, active_dims=None, n_dims=None, compute_engine=CustomComputeEngine()):
         super().__init__(active_dims=None, n_dims=None, compute_engine=compute_engine)
