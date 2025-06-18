@@ -27,47 +27,35 @@ def signature_kernel_algorithm(M, n_levels: int, order: int = 3,
 
 
     def compute_R_next(M, R, d, order):
-
         def fill_entry(R_next, r, s, val):
             return R_next.at[r, s].set(val)
-
+    
         R_next = jnp.zeros((order, order) + M.shape, dtype=M.dtype)
-
+    
         R_next = fill_entry(
             R_next, 0, 0,
-            M * multi_cumsum(jnp.sum(R, axis=(0, 1)), axis=(-2, -1)))
-
-
-def compute_R_next(M, R, d, order):
-    def fill_entry(R_next, r, s, val):
-        return R_next.at[r, s].set(val)
-
-    R_next = jnp.zeros((order, order) + M.shape, dtype=M.dtype)
-
-    R_next = fill_entry(
-        R_next, 0, 0,
-        M * multi_cumsum(jnp.sum(R, axis=(0, 1)), axis=(-2, -1))
-    )
-
-    def row_body(r, R_next):
-        R_next = fill_entry(
-            R_next, 0, r,
-            1. / (r + 1) * M * multi_cumsum(jnp.sum(R[:, r - 1], axis=0), axis=-2)
+            M * multi_cumsum(jnp.sum(R, axis=(0, 1)), axis=(-2, -1))
         )
-        R_next = fill_entry(
-            R_next, r, 0,
-            1. / (r + 1) * M * multi_cumsum(jnp.sum(R[r - 1, :], axis=0), axis=-1)
-        )
-
-        def col_body(s, R_next):
-            val = 1. / ((r + 1) * (s + 1)) * M * R[r - 1, s - 1]
-            return fill_entry(R_next, r, s, val)
-
-        R_next = jax.lax.fori_loop(1, d, col_body, R_next)
+    
+        def row_body(r, R_next):
+            R_next = fill_entry(
+                R_next, 0, r,
+                1. / (r + 1) * M * multi_cumsum(jnp.sum(R[:, r - 1], axis=0), axis=-2)
+            )
+            R_next = fill_entry(
+                R_next, r, 0,
+                1. / (r + 1) * M * multi_cumsum(jnp.sum(R[r - 1, :], axis=0), axis=-1)
+            )
+    
+            def col_body(s, R_next):
+                val = 1. / ((r + 1) * (s + 1)) * M * R[r - 1, s - 1]
+                return fill_entry(R_next, r, s, val)
+    
+            R_next = jax.lax.fori_loop(1, d, col_body, R_next)
+            return R_next
+    
+        R_next = jax.lax.fori_loop(1, d, row_body, R_next)
         return R_next
-
-    R_next = jax.lax.fori_loop(1, d, row_body, R_next)
-    return R_next
 
 
     if difference:
