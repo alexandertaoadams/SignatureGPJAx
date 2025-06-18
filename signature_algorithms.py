@@ -21,22 +21,23 @@ def multi_cumsum(X, axis=-1):
     return X
 
 
-def signature_kernel_algorithm(M, n_levels: int, order: int = 3,
+def signature_kernel_algorithm(M, n_levels: int, order: int = 3,More actions
                                 difference: bool = True,
                                 return_levels: bool = True):
 
 
     def compute_R_next(M, R, d, order):
+
         def fill_entry(R_next, r, s, val):
             return R_next.at[r, s].set(val)
-    
+
         R_next = jnp.zeros((order, order) + M.shape, dtype=M.dtype)
-    
+
         R_next = fill_entry(
             R_next, 0, 0,
-            M * multi_cumsum(jnp.sum(R, axis=(0, 1)), axis=(-2, -1))
-        )
-    
+            M * multi_cumsum(jnp.sum(R, axis=(0, 1)), axis=(-2, -1)))
+
+
         def row_body(r, R_next):
             R_next = fill_entry(
                 R_next, 0, r,
@@ -46,15 +47,12 @@ def signature_kernel_algorithm(M, n_levels: int, order: int = 3,
                 R_next, r, 0,
                 1. / (r + 1) * M * multi_cumsum(jnp.sum(R[r - 1, :], axis=0), axis=-1)
             )
-    
+
             def col_body(s, R_next):
                 val = 1. / ((r + 1) * (s + 1)) * M * R[r - 1, s - 1]
                 return fill_entry(R_next, r, s, val)
-    
+
             R_next = jax.lax.fori_loop(1, d, col_body, R_next)
-            return R_next
-    
-        R_next = jax.lax.fori_loop(1, d, row_body, R_next)
         return R_next
 
 
@@ -81,15 +79,17 @@ def signature_kernel_algorithm(M, n_levels: int, order: int = 3,
 
     R0 = init_R0(M, order)
 
-    def dynamic_iteration_needs_scan(R_prev, i):
-      d = jnp.minimum(i, order)
+    def dynamic_iteration_needs_scan(carry, i):
+      R_prev, K_prev = carry
+      d = jnp.minimum(i+1, order)
       R_next = compute_R_next(M, R_prev, d, order)
       R_sum = jnp.sum(R_next, axis=(0, 1, -2, -1))
-      return R_next, R_sum
+      K_new = K_prev + R_sum
+      return (R_next, K_new), R_sum
 
-    _, level_values = lax.scan(dynamic_iteration_needs_scan,
-                                                R0,
-                                                jnp.arange(2, n_levels+1))
+    (final_R, final_K), level_values = lax.scan(dynamic_iteration_needs_scan,
+                                                (R0, K_init),
+                                                jnp.arange(1, n_levels))
 
     if return_levels:
       return jnp.stack([levels[0], levels[1], *level_values], axis=0)
