@@ -3,7 +3,7 @@ import jax.numpy as jnp
 from jax import lax
 
 
-def modified_cumsum(X, axis=-1):
+def multi_cumsum(X, axis=-1):
     '''Like jnp.cumsum, but can be over multiple axes'''
     ndim = X.ndim
     axis = [axis] if jnp.isscalar(axis) else axis
