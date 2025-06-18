@@ -2,8 +2,8 @@ import jax.numpy as jnp
 from gpjax.kernels import AbstractKernel
 from gpjax.parameters import PositiveReal
 
-from .custom_classes_and_functions import CustomComputeEngine
-from .signature_algorithms import signature_kernel_algorithm_compiled
+from custom_classes_and_functions import CustomComputeEngine
+from signature_algorithms import signature_kernel_algorithm_compiled
 
 
 
