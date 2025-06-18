@@ -53,6 +53,8 @@ def signature_kernel_algorithm(M, n_levels: int, order: int = 3,
                 return fill_entry(R_next, r, s, val)
 
             R_next = jax.lax.fori_loop(1, d, col_body, R_next)
+            return R_next
+        R_next jax.lax.fori_loop(1, d, row_step, R_next)
         return R_next
 
 
