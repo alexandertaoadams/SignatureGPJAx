@@ -3,6 +3,24 @@ import jax.numpy as jnp
 from jax import lax
 
 
+def modified_cumsum(X, axis=-1):
+    '''Like jnp.cumsum, but can be over multiple axes'''
+    ndim = X.ndim
+    axis = [axis] if jnp.isscalar(axis) else axis
+    axis = [ndim + ax if ax < 0 else ax for ax in axis]
+  
+    slices = tuple(slice(-1) if ax in axis else slice(None) for ax in range(ndim))
+    X = X[slices]
+  
+    for ax in axis:
+        X = jnp.cumsum(X, axis=ax)
+  
+    pads = tuple((1, 0) if ax in axis else (0, 0) for ax in range(ndim))
+    X = jnp.pad(X, pads)
+  
+    return X
+
+
 def signature_kernel_algorithm(M, n_levels: int, order: int = 3,
                                 difference: bool = True,
                                 return_levels: bool = True):
@@ -17,17 +35,17 @@ def signature_kernel_algorithm(M, n_levels: int, order: int = 3,
 
         R_next = fill_entry(
             R_next, 0, 0,
-            M * multi_cumsum(jnp.sum(R, axis=(0, 1)), exclusive=True, axis=(-2, -1)))
+            M * multi_cumsum(jnp.sum(R, axis=(0, 1)), axis=(-2, -1)))
 
 
         def row_body(r, R_next):
             R_next = fill_entry(
                 R_next, 0, r,
-                1. / (r + 1) * M * multi_cumsum(jnp.sum(R[:, r - 1], axis=0), exclusive=True, axis=-2)
+                1. / (r + 1) * M * multi_cumsum(jnp.sum(R[:, r - 1], axis=0), axis=-2)
             )
             R_next = fill_entry(
                 R_next, r, 0,
-                1. / (r + 1) * M * multi_cumsum(jnp.sum(R[r - 1, :], axis=0), exclusive=True, axis=-1)
+                1. / (r + 1) * M * multi_cumsum(jnp.sum(R[r - 1, :], axis=0), axis=-1)
             )
 
             def col_body(s, R_next):
