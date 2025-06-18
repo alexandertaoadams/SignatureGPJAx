@@ -59,7 +59,7 @@ def signature_kernel_algorithm(S, n_levels):
 
 
     def recurrence_step_for_scanning(A_prev, idx):
-        A_next = compute_A_next(S, A_prev, d, max_shape)
+        A_next = compute_A_next(S, A_prev, idx, max_shape)
         L_next = jnp.sum(A_next, axis=(0, 1, -2, -1))
         return A_next, L_next
 
