@@ -1,3 +1,4 @@
+import gpjax and gpx
 import jax.numpy as jnp
 from gpjax.kernels import AbstractKernel
 from gpjax.parameters import PositiveReal
