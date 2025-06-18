@@ -1,5 +1,5 @@
 import typing as tp
-
+import cola
 import gpjax as gpx
 import jax
 import jax.numpy as jnp
