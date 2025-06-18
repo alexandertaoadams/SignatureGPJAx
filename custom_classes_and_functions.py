@@ -1,6 +1,6 @@
 import typing as tp
 
-import gpjax
+import gpjax as gpx
 import jax
 import jax.numpy as jnp
 import jax.random as jr
