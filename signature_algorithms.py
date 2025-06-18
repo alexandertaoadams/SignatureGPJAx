@@ -21,7 +21,7 @@ def multi_cumsum(X, axis=-1):
     return X
 
 
-def signature_kernel_algorithm(M, n_levels: int, order: int = 3,More actions
+def signature_kernel_algorithm(M, n_levels: int, order: int = 3,
                                 difference: bool = True,
                                 return_levels: bool = True):
 
