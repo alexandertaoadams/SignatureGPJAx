@@ -93,17 +93,15 @@ def compute_R_next(M, R, d, order):
 
     R0 = init_R0(M, order)
 
-    def dynamic_iteration_needs_scan(carry, i):
-      R_prev, K_prev = carry
-      d = jnp.minimum(i+1, order)
+    def dynamic_iteration_needs_scan(R_prev, i):
+      d = jnp.minimum(i, order)
       R_next = compute_R_next(M, R_prev, d, order)
       R_sum = jnp.sum(R_next, axis=(0, 1, -2, -1))
-      K_new = K_prev + R_sum
-      return (R_next, K_new), R_sum
+      return R_next, R_sum
 
-    (final_R, final_K), level_values = lax.scan(dynamic_iteration_needs_scan,
-                                                (R0, K_init),
-                                                jnp.arange(1, n_levels))
+    _, level_values = lax.scan(dynamic_iteration_needs_scan,
+                                                R0,
+                                                jnp.arange(2, n_levels+1))
 
     if return_levels:
       return jnp.stack([levels[0], levels[1], *level_values], axis=0)
