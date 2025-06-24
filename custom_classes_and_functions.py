@@ -147,18 +147,10 @@ def custom_fit(  # noqa: PLR0913
         params = transform(params, params_bijection, inverse=True)
 
     # Loss definition
-    def safe_loss(params, batch):
+    def loss(params: nnx.State, batch: Dataset) -> ScalarFloat:
         params = transform(params, params_bijection)
         model = nnx.merge(graphdef, params, *static_state)
-        
-        loss_val = objective(model, batch)
-        jax.debug.print("Loss value: {}", loss_val)
-        jax.debug.print("Loss is NaN? {}", jnp.isnan(loss_val))
-        
-        for path, p in nnx.visit(params):
-            jax.debug.print("Param {}: min {}, max {}, nan? {}", path, jnp.min(p), jnp.max(p), jnp.isnan(p).any())
-    
-        return loss_val
+        return objective(model, batch)
 
     # Initialise optimiser state.
     opt_state = optim.init(params)
@@ -175,7 +167,7 @@ def custom_fit(  # noqa: PLR0913
         else:
             batch = train_data
 
-        loss_val, loss_gradient = jax.value_and_grad(safe_loss)(params, batch)
+        loss_val, loss_gradient = jax.value_and_grad(loss)(params, batch)
         updates, opt_state = optim.update(loss_gradient, opt_state, params)
         params = ox.apply_updates(params, updates)
 
