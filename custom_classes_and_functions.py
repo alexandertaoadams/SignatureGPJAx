@@ -43,7 +43,7 @@ class CustomComputeEngine(gpx.kernels.computations.AbstractKernelComputation):
     (n_sequences, seq_length, n_dimensions)
     '''
     def gram(self, kernel, X):
-        return kernel(X, X)
+        return cola.PSD(cola.ops.Dense(kernel(X, X)))
 
     def cross_covariance(self, kernel, X, X2):
         return kernel(X,X2)
