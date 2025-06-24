@@ -155,8 +155,8 @@ def custom_fit(  # noqa: PLR0913
         jax.debug.print("Loss value: {}", loss_val)
         jax.debug.print("Loss is NaN? {}", jnp.isnan(loss_val))
         
-        for name, p in nnx.items(params):
-            jax.debug.print("Param {}: min {}, max {}, nan? {}", name, jnp.min(p), jnp.max(p), jnp.isnan(p).any())
+        for path, p in nnx.visit(params):
+            jax.debug.print("Param {}: min {}, max {}, nan? {}", path, jnp.min(p), jnp.max(p), jnp.isnan(p).any())
     
         return loss_val
 
