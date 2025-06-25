@@ -40,7 +40,7 @@ class CustomDataset(gpx.dataset.Dataset):
 
 class CustomComputeEngine(gpx.kernels.computations.AbstractKernelComputation):
     def gram(self, kernel, X):
-        return  cola.ops.Dense(kernel(X, X))
+        return  cola.PSD(cola.ops.Dense(kernel(X, X)))
 
     def cross_covariance(self, kernel, X, X2):
         return kernel(X, X2)
