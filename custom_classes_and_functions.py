@@ -46,10 +46,10 @@ class CustomComputeEngine(gpx.kernels.computations.AbstractKernelComputation):
         return cola.PSD(cola.ops.Dense(kernel(X, X)))
 
     def cross_covariance(self, kernel, X, X2):
-        return cola.PSD(cola.ops.Dense(kernel(X,X2))
+        return cola.PSD(cola.ops.Dense(kernel(X,X2)))
 
     def diagonal(self, kernel, X):
-        return cola.PSD(cola.ops.Dense(kernel(X))
+        return cola.PSD(cola.ops.Dense(kernel(X)))
 
 
 
