@@ -40,13 +40,13 @@ class CustomDataset(gpx.dataset.Dataset):
 
 class CustomComputeEngine(gpx.kernels.computations.AbstractKernelComputation):
     def gram(self, kernel, X):
-        return kernel(X, X)
+        return  cola.ops.Dense(kernel(X, X))
 
     def cross_covariance(self, kernel, X, X2):
         return kernel(X, X2)
 
     def diagonal(self, kernel, X):
-        return jnp.diagonal(kernel(X, X), axis1=0, axis2=1)
+        return cola.ops.Diagonal(jnp.diagonal(kernel(X, X), axis1=0, axis2=1))
 
 
 
