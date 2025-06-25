@@ -39,17 +39,14 @@ class CustomDataset(gpx.dataset.Dataset):
 
 
 class CustomComputeEngine(gpx.kernels.computations.AbstractKernelComputation):
-    '''Custom class for the computation engine, in the case where inputs are 3-dimensional rather than 2-dimensional:
-    (n_sequences, n_dimensions, seq_length)
-    '''
     def gram(self, kernel, X):
-        return cola.PSD(cola.ops.Dense(kernel(X, X)))
+        return kernel(X, X)
 
     def cross_covariance(self, kernel, X, X2):
-        return cola.PSD(cola.ops.Dense(kernel(X,X2)))
+        return kernel(X, X2)
 
     def diagonal(self, kernel, X):
-        return cola.PSD(cola.ops.Dense(kernel(X)))
+        return jnp.diagonal(kernel(X, X), axis1=0, axis2=1)
 
 
 
