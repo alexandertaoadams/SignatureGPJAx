@@ -20,16 +20,6 @@ K = tp.TypeVar("K", bound="gpjax.kernels.base.AbstractKernel")  # noqa: F821
 
 
 class CustomComputeEngine(AbstractKernelComputation):
-    r"""Abstract class for kernel computations.
-
-    This class defines the interface for computing the covariance matrix of a kernel
-    function. It is used to compute the Gram matrix, cross-covariance, and diagonal
-    variance of a kernel function. Each computation engine implements the computation
-    of these quantities in a different way. Subclasses implement computations as private
-    methods. If a non-standard interface is required, the subclass should override the
-    public methods of this class.
-
-    """
 
     def _gram(
         self,
