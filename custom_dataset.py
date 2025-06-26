@@ -7,11 +7,11 @@ import jax.numpy as jnp
 from jaxtyping import Num
 
 from gpjax.typing import Array
-
+from gpjax.dataset import Dataset
 
 @dataclass
 @jax.tree_util.register_pytree_node_class
-class CustomDataset(gpjax.dataset.Dataset):
+class CustomDataset(Dataset):
     r"""Base class for datasets.
 
     Args:
