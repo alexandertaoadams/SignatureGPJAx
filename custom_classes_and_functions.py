@@ -24,6 +24,8 @@ from gpjax.typing import (
     ScalarFloat,
 )
 
+from custom_dataset import CustomDataset
+
 Model = tp.TypeVar("Model", bound=nnx.Module)
 
 
