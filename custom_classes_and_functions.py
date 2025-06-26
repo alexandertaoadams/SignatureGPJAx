@@ -28,16 +28,6 @@ Model = tp.TypeVar("Model", bound=nnx.Module)
 
 
 
-class CustomDataset(gpx.dataset.Dataset):
-    '''Custom class for the dataset, in the case where inputs are 3-dimensional rather than 2-dimensional:
-    (n_sequences, n_dimensions, seq_length)
-    '''
-    def __init__(self,X,y):
-        self.X = X
-        self.y = y
-
-
-
 class CustomComputeEngine(gpx.kernels.computations.AbstractKernelComputation):
     def gram(self, kernel, X):
         return cola.PSD(cola.ops.Dense(kernel(X, X)))
