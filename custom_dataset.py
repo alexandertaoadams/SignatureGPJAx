@@ -11,7 +11,7 @@ from gpjax.typing import Array
 
 @dataclass
 @jax.tree_util.register_pytree_node_class
-class CustomDataset:
+class CustomDataset(gpjax.dataset.Dataset):
     r"""Base class for datasets.
 
     Args:
