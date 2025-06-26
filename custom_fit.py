@@ -30,19 +30,6 @@ Model = tp.TypeVar("Model", bound=nnx.Module)
 
 
 
-class CustomComputeEngine(gpx.kernels.computations.AbstractKernelComputation):
-    def gram(self, kernel, X):
-        return cola.PSD(cola.ops.Dense(kernel(X, X)))
-
-    def cross_covariance(self, kernel, X, X2):
-        return kernel(X, X2)
-
-    def diagonal(self, kernel, X):
-        return cola.ops.Diagonal(jnp.diagonal(kernel(X, X), axis1=0, axis2=1))
-
-
-
-
 def custom_fit(  # noqa: PLR0913
     *,
     model: Model,
